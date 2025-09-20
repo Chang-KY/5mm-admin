@@ -324,6 +324,7 @@ const ProjectCommonForm = ({onSubmit, isPending, error, form, type, overallPct}:
           </div>
         </div>
 
+        <p className='font-bold text-left'>생성 및 변경 후 2분 후 고객페이지에 반영됩니다.</p>
         {/* 버튼 */}
         <div className="mt-6 w-full flex items-center justify-end">
           <div className="w-full mt-4 flex gap-3 items-center justify-end">

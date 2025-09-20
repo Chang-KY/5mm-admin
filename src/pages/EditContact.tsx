@@ -193,6 +193,7 @@ export default function EditContact() {
           </div>
         </section>
 
+        <p className='font-bold text-left'>변경 후 2분 후 고객페이지에 반영됩니다.</p>
         {/* 액션바 */}
         <div className="sticky bottom-4 flex items-center justify-end gap-3">
           <div className='w-full mt-4 flex gap-3 items-center justify-end'>

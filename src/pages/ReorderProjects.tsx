@@ -164,6 +164,9 @@ export default function ReorderProjects() {
             ))}
           </SortableContext>
         </DndContext>
+
+        <p className='font-bold text-left'>변경 후 2분 후 고객페이지에 반영됩니다.</p>
+
         <div className='w-full mt-4 flex gap-3 items-center justify-end'>
           <button className='btn-underline' type='button' onClick={handleUndo}>
             Undo
