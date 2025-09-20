@@ -4,7 +4,8 @@ import {
   useSensor,
   useSensors,
   PointerSensor,
-  type DragEndEvent,
+  TouchSensor,
+  type DragEndEvent
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -47,7 +48,7 @@ function SortableRow({id, index, title}: { id: number; index: number; title: str
       <button
         {...attributes}
         {...listeners}
-        className="px-2 py-1 rounded border cursor-grab select-none"
+        className="px-2 py-1 rounded border cursor-grab active:cursor-grabbing select-none touch-none"
         aria-label="Drag handle"
       >
         ↕
@@ -78,7 +79,12 @@ export default function ReorderProjects() {
   }, [items]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {activationConstraint: {distance: 10}})
+    // 데스크톱: 포인터로 즉시 시작
+    useSensor(PointerSensor, {activationConstraint: {distance: 6}}),
+    // 모바일: 살짝 누르고(press delay) 드래그 시작
+    useSensor(TouchSensor, {
+      activationConstraint: {delay: 150, tolerance: 8}, // 120~250ms 선호
+    })
   );
 
   const handleDragEnd = (event: DragEndEvent) => {

@@ -17,7 +17,6 @@ const InputImage = <T extends FieldValues>({
                                              setValue,
                                              engTitle,
                                              append,
-                                             isLast,
                                              error,
                                              defaultValue,
                                              multiple,
@@ -29,45 +28,66 @@ const InputImage = <T extends FieldValues>({
 
   const handleClick = () => fileInputRef.current?.click();
 
+  const handleFiles = (files: File[]) => {
+    if (!files.length) return;
+
+    // 1) 현재 칸엔 첫 번째 파일
+    const [first, ...rest] = files;
+    const firstUrl = URL.createObjectURL(first);
+    // 이전 URL 정리
+    if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    objectUrlRef.current = firstUrl;
+    setPreview(firstUrl);
+
+    setValue(engTitle, first as never, {shouldDirty: true, shouldValidate: true, shouldTouch: true});
+
+    // 2) 나머지는 새 칸에 append
+    if (append && rest.length > 0) {
+      rest.forEach((f) => append({image_url: f}));
+    }
+
+    // 3) “맨 끝에 빈 칸 하나 더” 유지하고 싶다면 (선택)
+    // if (isLast && append) append();
+
+    // 동일한 파일을 다시 선택 가능하게 input 리셋
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const fl = e.target.files;
+    if (!fl) return;
+    // multiple 여부와 상관 없이 공통 함수 사용
+    handleFiles(Array.from(fl));
+  };
 
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-
-    setValue(engTitle, file as never, {shouldDirty: true, shouldValidate: true, shouldTouch: true});
-
-    if (isLast && append) append();
+  // 드래그&드롭 지원
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+  const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const fl = e.dataTransfer.files;
+    if (!fl || !fl.length) return;
+    handleFiles(Array.from(fl));
   };
 
   useEffect(() => {
     let value: unknown = defaultValue;
-
-    // defaultValue가 { image_url: ... } 형태인 경우 꺼내기
     if (defaultValue && typeof defaultValue === "object" && "image_url" in defaultValue) {
-      value = defaultValue.image_url;
+      value = (defaultValue).image_url;
     }
-
-    // 값이 없으면 패스
     if (!value) return;
 
-    // 이전 objectURL 정리
     if (objectUrlRef.current) {
       URL.revokeObjectURL(objectUrlRef.current);
       objectUrlRef.current = null;
     }
 
-    // File이면 objectURL로 프리뷰
     if (value instanceof File) {
       const url = URL.createObjectURL(value);
       objectUrlRef.current = url;
       setPreview(url);
-
-      // RHF에도 값 세팅 (등록/검증 반영)
       setValue(engTitle, value as never, {shouldValidate: true, shouldDirty: true});
-
-      // cleanup
       return () => {
         if (objectUrlRef.current) {
           URL.revokeObjectURL(objectUrlRef.current);
@@ -76,7 +96,6 @@ const InputImage = <T extends FieldValues>({
       };
     }
 
-    // 문자열(URL)인 경우 그대로 프리뷰
     if (typeof value === "string") {
       setPreview(value);
       setValue(engTitle, value as never, {shouldValidate: true});
@@ -87,30 +106,20 @@ const InputImage = <T extends FieldValues>({
     <div className="mt-2 sm:col-span-2 sm:mt-0 relative">
       <div
         onClick={handleClick}
-        className="border-2 border-dashed border-black min-w-60 w-60 max-w-60 min-h-72 h-72 max-h-72 flex items-center justify-center cursor-pointer hover:bg-blue-50 overflow-hidden"
+        onDragOver={onDragOver}
+        onDrop={onDrop}
+        className="border-2 border-dashed border-black min-w-60 w-60 max-w-60 min-h-72 h-72 max-h-72
+                   flex items-center justify-center cursor-pointer hover:bg-blue-50 overflow-hidden"
+        title={multiple ? "클릭 또는 드래그&드롭으로 여러 이미지를 추가" : "클릭하여 이미지 선택"}
       >
         {preview ? (
-          <div className="relative size-full" title='이미지를 변경하시려면 클릭하세요.'>
-            <img
-              src={preview}
-              alt={`${engTitle} preview`}
-              className="w-full h-full object-cover"
-            />
-            {/*<button*/}
-            {/*  type="button"*/}
-            {/*  onClick={() => {*/}
-            {/*    setPreview(null);*/}
-            {/*    setValue(engTitle, "" as never);*/}
-            {/*  }}*/}
-            {/*  className="absolute top-2 right-2 bg-white border hover:bg-red-600 hover:text-white text-black text-sm px-3 py-1"*/}
-            {/*  title='클릭하시면 이미지가 지워지고 다시 넣을수 있게 됩니다.'*/}
-            {/*>*/}
-            {/*  Clear*/}
-            {/*</button>*/}
-
+          <div className="relative size-full" title="이미지를 변경하려면 클릭하세요.">
+            <img src={preview} alt={`${String(engTitle)} preview`} className="w-full h-full object-cover"/>
           </div>
         ) : (
-          <span className="text-2xl text-gray-500">+</span>
+          <span className="text-2xl text-gray-500">{multiple ? "＋" :
+            <span className='flex flex-col items-center justify-center'>＋<span
+              className='text-xs'>(썸네일은 한장입니다)</span></span>}</span>
         )}
       </div>
 
@@ -127,5 +136,6 @@ const InputImage = <T extends FieldValues>({
     </div>
   );
 };
+
 
 export default InputImage;
