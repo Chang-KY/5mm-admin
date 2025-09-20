@@ -58,7 +58,7 @@ const DetailProject = () => {
   return (
     <div className="text-black pb-5">
       <PageTitle title="Project Detail">
-        <div className='flex items-center justify-between gap-2'>
+        <div className='flex items-center justify-end gap-2'>
           <button
             type='button'
             className="btn-black"
@@ -130,7 +130,7 @@ const DetailProject = () => {
           </div>
         </div>
         <div className='w-full flex items-center justify-end mt-5'>
-          <div className='w-48'>
+          <div className='w-full mt-4 flex gap-3 items-center justify-end'>
             <button className="btn-red" onClick={() => setIsOpen(true)}>
               Project Delete
             </button>
@@ -138,7 +138,7 @@ const DetailProject = () => {
         </div>
       </div>
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <div className='w-96 h-56 flex flex-col justify-between'>
+        <div className='w-80 md:w-96 h-56 flex flex-col justify-between'>
           {/* 안내 문구 */}
           {isPending ?
             <div className='size-full flex flex-col gap-3 items-center justify-center'>

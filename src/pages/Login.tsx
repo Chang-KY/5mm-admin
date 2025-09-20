@@ -56,9 +56,9 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="size-full min-h-dvh flex items-center justify-center">
+    <div className="size-full min-h-dvh flex items-center justify-center px-1">
       {loginMutation.isPending && <ProgressScreen mention='로그인 중입니다. 잠시만 기다려주세요...'/>}
-      <form onSubmit={handleSubmit} className='m-auto py-4 min-w-80'>
+      <form onSubmit={handleSubmit} className='m-auto py-4 min-w-72'>
         <div className='border border-black p-7 flex flex-col gap-3 relative'>
           <p className='absolute top-0 bg-black text-white px-2 py-0.5 right-0 font-bold text-xs'>5MM Studio</p>
           <div>

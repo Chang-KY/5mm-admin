@@ -25,7 +25,7 @@ const Dashboard = () => {
   return (
     <div className=''>
       <PageTitle title="Dashboard">
-        <div className='flex items-center gap-3'>
+        <div className='flex items-center justify-end gap-3'>
           <button
             type='button'
             onClick={() => navigate('/reorder-projects')}
@@ -45,10 +45,10 @@ const Dashboard = () => {
       <div>
         <div className='px-3 flex items-center justify-between'>
           <div>
-            <label className="block text-sm font-medium text-gray-900">
+            <label className="hidden md:block text-sm font-medium text-gray-900">
               고객 페이지 노출 순서
             </label>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="hidden md:block mt-1 text-xs text-gray-500">
               숫자가 작을수록 먼저 표시됩니다. (1이 최상단)
             </p>
           </div>
@@ -62,6 +62,14 @@ const Dashboard = () => {
               className="min-w-[170px] max-w-[170px] w-[170px] h-14 px-3 py-2 border text-black border-black focus:outline-none focus:ring-2"
             />
           </div>
+        </div>
+        <div className="px-3 mt-3">
+          <label className="block md:hidden text-sm font-medium text-gray-900">
+            고객 페이지 노출 순서
+          </label>
+          <p className="block md:hidden mt-1 text-xs text-gray-500">
+            숫자가 작을수록 먼저 표시됩니다. (1이 최상단)
+          </p>
         </div>
         <Table columns={columns} data={filteredProjects}/>
       </div>

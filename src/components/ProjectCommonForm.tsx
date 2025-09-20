@@ -326,7 +326,7 @@ const ProjectCommonForm = ({onSubmit, isPending, error, form, type, overallPct}:
 
         {/* 버튼 */}
         <div className="mt-6 w-full flex items-center justify-end">
-          <div className="w-40 gap-x-6 flex items-center justify-end">
+          <div className="w-full mt-4 flex gap-3 items-center justify-end">
             <button type="button" className="btn-underline" onClick={() => navigate(-1)}>
               Cancel
             </button>

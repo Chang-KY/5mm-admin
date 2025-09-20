@@ -1,10 +1,19 @@
 import {type ReactNode} from "react";
 
-const PageTitle = ({title, children}: { title: string, children?: ReactNode }) => {
+const PageTitle = ({title, children}: { title: string; children?: ReactNode }) => {
   return (
-    <div className='flex items-center justify-between py-2 px-3'>
-      <h2 className='text-2lg'>・{title}</h2>
-      <div className='min-w-40 w-[22rem] text-right'>
+    <div
+      className="
+        px-3 py-2
+        flex flex-col gap-2
+        md:flex-row md:items-center md:justify-between
+      "
+    >
+      {/* 위(모바일) / 왼쪽(md↑) : 제목 */}
+      <h2 className="text-2xl">・{title}</h2>
+
+      {/* 아래(모바일) / 오른쪽(md↑) : 버튼 영역 */}
+      <div className="w-full text-right md:w-[22rem] md:min-w-40">
         {children}
       </div>
     </div>

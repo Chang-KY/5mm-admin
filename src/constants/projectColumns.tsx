@@ -41,6 +41,10 @@ export const columns = [
   columnHelper.accessor("created_at", {
     header: "Created At",
     cell: ({getValue}) => formatKoreanDateTime(getValue() as string),
+    meta: {
+      headerClass: "hidden md:table-cell",
+      cellClass: "hidden md:table-cell",
+    },
   }),
   // columnHelper.accessor("thumbnail", {
   //   header: "Thumbnail",

@@ -1,5 +1,6 @@
 import {type ColumnDef, flexRender, getCoreRowModel, useReactTable} from "@tanstack/react-table";
 import {useNavigate} from "react-router-dom";
+import clsx from "clsx";
 
 interface TableProps<TData extends { id: string | number; title: string }> {
   data: TData[];
@@ -32,7 +33,7 @@ const Table = <TData extends { id: string | number; title: string }>({
                 {/* Description (남는 폭) */}
                 <col/>
                 {/* Created At */}
-                <col style={{width: '16ch'}}/>
+                <col className="hidden md:table-column" style={{width: "16ch"}}/>
               </colgroup>
               <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -41,7 +42,10 @@ const Table = <TData extends { id: string | number; title: string }>({
                     <th
                       key={header.id}
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className={clsx(
+                        "px-3 py-3.5 text-left text-sm font-semibold text-gray-900",
+                        (header.column.columnDef)?.meta?.headerClass
+                      )}
                     >
                       {header.isPlaceholder
                         ? null
@@ -51,30 +55,30 @@ const Table = <TData extends { id: string | number; title: string }>({
                 </tr>
               ))}
               </thead>
+
               <tbody className="divide-y divide-gray-200 bg-white">
-              {table.getRowModel().rows.map((row) => {
-                  return (
-                    <tr
-                      key={row.id}
-                      className="group cursor-pointer
-                                odd:bg-gray-50 even:bg-white
-                                hover:bg-indigo-50 transition-colors"
-                      title={`클릭 하면 -${row.original.title}- 디테일 페이지에 이동`}
-                      onClick={() => navigate(`/detail-project/${row.original.id}`)}
+              {table.getRowModel().rows.map((row) => (
+                <tr
+                  key={row.id}
+                  className="group cursor-pointer odd:bg-gray-50 even:bg-white hover:bg-indigo-50 transition-colors"
+                  title={`클릭 하면 -${row.original.title}- 디테일 페이지에 이동`}
+                  onClick={() => navigate(`/detail-project/${row.original.id}`)}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      className={clsx(
+                        "px-3 py-5 text-sm whitespace-nowrap overflow-hidden text-ellipsis text-gray-500 transition-colors",
+                        (cell.column.columnDef)?.meta?.cellClass
+                      )}
                     >
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="px-3 py-5 text-sm whitespace-nowrap overflow-hidden text-ellipsis text-gray-500 transition-colors"
-                        >
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </td>
-                      ))}
-                    </tr>
-                  )
-                }
-              )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
               </tbody>
+
             </table>
           </div>
           <p className='text-xs text-right w-full px-2 py-0.5 font-bold'>

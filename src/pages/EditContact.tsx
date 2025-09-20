@@ -195,7 +195,7 @@ export default function EditContact() {
 
         {/* 액션바 */}
         <div className="sticky bottom-4 flex items-center justify-end gap-3">
-          <div className='flex items-center gap-3 min-w-96'>
+          <div className='w-full mt-4 flex gap-3 items-center justify-end'>
             <button
               type="button"
               className="btn-underline"
